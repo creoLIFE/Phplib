@@ -12,7 +12,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Phplib\\Helpers\\": "src/Phplib/Helpers/"
+            "Phplib\\Helpers\\": "src/Phplib/Helpers"
         }
     }
 }
