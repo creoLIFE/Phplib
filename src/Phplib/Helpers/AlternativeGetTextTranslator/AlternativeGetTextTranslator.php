@@ -18,9 +18,9 @@
  *
  * @see http://phptal.org/manual/en/split/gettext.html
  */
-namespace Phplib\Helpers\AlternativeGetTextTranslator
+namespace Phplib\Helpers\AlternativeGetTextTranslator;
 
-class AlternativeGetTextTranslator implements PHPTAL_TranslationService
+class AlternativeGetTextTranslator implements \PHPTAL_TranslationService
 {
     private $_vars = array();
     private $_currentDomain;

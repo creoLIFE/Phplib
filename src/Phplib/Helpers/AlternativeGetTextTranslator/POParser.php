@@ -22,6 +22,7 @@
  * }
  * </code>
  */
+namespace Phplib\Helpers\AlternativeGetTextTranslator;
 
 class POParser {
 
