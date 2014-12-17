@@ -10,11 +10,11 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="./vendor/autoload.php"
+         bootstrap="../vendor/autoload.php"
 >
     <testsuites>
         <testsuite name="Helpers">
-            <file>test/ParamsTest.php</file>
+            <file>./ParamsTest.php</file>
             <!--<file>test/GetTextTranslatorTest.php</file>-->
         </testsuite>
     </testsuites>
