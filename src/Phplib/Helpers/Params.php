@@ -3,7 +3,7 @@
  * Helper for parameters
  * @package Phplib\Helpers
  * @author Mirek Ratman
- * @version 1.0.0
+ * @version 1.1.0
  * @since 2014-12-17
  * @license The MIT License (MIT)
  * @copyright 2014 creoLIFE.pl
@@ -23,18 +23,35 @@ class Params
     private $params;
 
     /**
+     * @var $params
+     */
+    private $safeMode;
+
+    /**
      * Class constructor
      * @method __construct
      * @param string $params - object with GET or POST params
      */
-    public function __construct($params = array())
+    public function __construct(array $params, $safeMode = true)
     {
         $this->params = $params;
+        self::setSafeMode($safeMode);
     }
 
     /**
      * Method will check if param exists in given GET or POST array and return value
-     * @method getParam
+     * @param [string] $name - param name to take
+     * @param [string] $reg - regular expression to validate parameter
+     * @param [mixed] $alternative - alternative value if checked param not exists or its null
+     * @return string
+     */
+    public function setSafeMode($mode)
+    {
+        $this->safeMode = (boolean)$mode;
+    }
+
+    /**
+     * Method will check if param exists in given GET or POST array and return value
      * @param [string] $name - param name to take
      * @param [string] $reg - regular expression to validate parameter
      * @param [mixed] $alternative - alternative value if checked param not exists or its null
@@ -42,18 +59,13 @@ class Params
      */
     public function getParam($name, $reg = null, $alternative = null)
     {
-        $param = isset($this->params[$name]) && $this->params[$name] !== null && $this->params[$name] !== '' ? $this->params[$name] : ($alternative !== null ? $alternative : '');
-        if ($reg !== null) {
-            return self::validate($param, $reg) ? $param : false;
-        } else {
-            return $param;
-        }
+        $param = isset($this->params[$name]) && !empty($this->params[$name]) ? $this->params[$name] : (empty($alternative) ? $alternative : '');
+        self::applyXssProtection($param);
+        return !empty($reg) ? (self::validate($param, $reg) ? $param : false) : $param;
     }
-
 
     /**
      * Method will validate given value base on delivered regular expression
-     * @method applyReg
      * @param [string] $val - value to check
      * @param [string] $reg - regular expression to validate value
      * @return [boolean]
@@ -65,5 +77,15 @@ class Params
             return true;
         }
         return false;
+    }
+
+    /**
+     * Method will apply safe mode
+     * @param [string] $param - parameter to secure
+     * @return [void]
+     */
+    private function applyXssProtection(&$param)
+    {
+        $param = $this->safeMode ? str_replace(array("&", "<", ">"), array("&amp;", "&lt;", "&gt;"), $param) : $param;
     }
 }

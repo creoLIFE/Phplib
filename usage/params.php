@@ -13,8 +13,11 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 $pClass = new \Phplib\Helpers\Params(
     array(
         'url' => 'http://www.google.pl',
-        'product' => 'Product 1'
+        'product' => 'Product 1',
+        'unsafe' => "<script>alert(1)</script>Product 1"
     )
 );
 
+var_dump($pClass->getParam('url'));
 var_dump($pClass->getParam('product', '/[a-zA-Z0-9\s]+/'));
+var_dump($pClass->getParam('unsafe'));

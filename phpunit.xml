@@ -15,7 +15,7 @@
     <testsuites>
         <testsuite name="Helpers">
             <file>test/ParamsTest.php</file>
-            <file>test/GetTextTranslatorTest.php</file>
+            <!--<file>test/GetTextTranslatorTest.php</file>-->
         </testsuite>
     </testsuites>
     <logging>
