@@ -16,6 +16,21 @@ namespace Phplib\Helpers;
 
 class Params
 {
+    /**
+     * @var $params
+     */
+    const REG_INT = '/[0-9]+/';
+
+    /**
+     * @var $params
+     */
+    const REG_STRING = '/[a-zA-Z0-9\s\#\.\,\!\?\-\_]+/';
+
+    /**
+     * @var $params
+     */
+    const REG_DATE = '/Y.m.d/';
+
 
     /**
      * @var $params
@@ -53,14 +68,16 @@ class Params
     /**
      * Method will check if param exists in given GET or POST array and return value
      * @param [string] $name - param name to take
+     * @param [string] $type - type of parameter to check (integer,string,text,date,datetime)
      * @param [string] $reg - regular expression to validate parameter
      * @param [mixed] $alternative - alternative value if checked param not exists or its null
      * @return string
      */
-    public function getParam($name, $reg = null, $alternative = null)
+    public function getParam($name, $type = null, $reg = null, $alternative = null)
     {
-        $param = isset($this->params[$name]) && !empty($this->params[$name]) ? $this->params[$name] : (empty($alternative) ? $alternative : '');
+        $param = isset($this->params[$name]) && !empty($this->params[$name]) ? $this->params[$name] : (!empty($alternative) ? $alternative : '');
         self::applyXssProtection($param);
+        self::checkType($param, $type);
         return !empty($reg) ? (self::validate($param, $reg) ? $param : false) : $param;
     }
 
@@ -88,4 +105,41 @@ class Params
     {
         $param = $this->safeMode ? str_replace(array("&", "<", ">"), array("&amp;", "&lt;", "&gt;"), $param) : $param;
     }
+
+    /**
+     * Method will check if given param is in given predefined type
+     * @param [string] $param - parameter to check
+     * @param [string] $type - parameter type
+     * @return [void]
+     */
+    private function checkType(&$param, $type)
+    {
+        if( empty($type) ){
+            return;
+        }
+
+        $reg = null;
+        switch($type){
+            case 'text':
+            case 'string':
+                $param = self::validate($param,self::REG_STRING)
+                break;
+            case 'int':
+            case 'integer':
+                $param = self::validate($param,self::REG_INT)
+                break;
+            case 'datetime':
+                $param = self::checkDateTime($param);
+                break;
+            case 'date':
+                $reg = self::REG_DATE;
+                break;
+            case 'time':
+                $reg = self::REG_TIME;
+                break;
+        }
+
+        $param = self::validate($param,$reg) ? $param : (string) null;
+    }
+
 }
