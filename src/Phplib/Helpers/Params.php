@@ -122,11 +122,11 @@ class Params
         switch($type){
             case 'text':
             case 'string':
-                $param = self::validate($param,self::REG_STRING)
+                $param = self::validate($param,self::REG_STRING);
                 break;
             case 'int':
             case 'integer':
-                $param = self::validate($param,self::REG_INT)
+                $param = self::validate($param,self::REG_INT);
                 break;
             case 'datetime':
                 $param = self::checkDateTime($param);
