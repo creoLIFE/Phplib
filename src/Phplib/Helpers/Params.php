@@ -17,20 +17,24 @@ namespace Phplib\Helpers;
 class Params
 {
     /**
-     * @var $params
+     * @var string - numbers regex patters
      */
     const REG_INT = '/[0-9]+/';
 
     /**
-     * @var $params
+     * @var string - string regex patters
      */
     const REG_STRING = '/[a-zA-Z0-9\s\#\.\,\!\?\-\_]+/';
 
     /**
-     * @var $params
+     * @var string - date regex patters
      */
-    const REG_DATE = '/Y.m.d/';
+    const REG_DATE = '/[0-9]{2,4}-[0-9]{2}-[0-9]{2}/';
 
+    /**
+     * @var string - date regex patters
+     */
+    const REG_DATETIME = '/Y.m.d [0-9]{2}.[0-9]{2}.[0-9]{2}.[0-9]{3}./';
 
     /**
      * @var $params
@@ -77,8 +81,8 @@ class Params
     {
         $param = isset($this->params[$name]) && !empty($this->params[$name]) ? $this->params[$name] : (!empty($alternative) ? $alternative : '');
         self::applyXssProtection($param);
-        self::checkType($param, $type);
-        return !empty($reg) ? (self::validate($param, $reg) ? $param : false) : $param;
+        $reg = self::getRegexForType($type);
+        return !empty($reg) ? self::validate($param, $reg) ? $param : null : $param;
     }
 
     /**
@@ -107,39 +111,37 @@ class Params
     }
 
     /**
-     * Method will check if given param is in given predefined type
+     * Method will return predefined regular expression based on given type
      * @param [string] $param - parameter to check
      * @param [string] $type - parameter type
      * @return [void]
      */
-    private function checkType(&$param, $type)
+    private function getRegexForType($type)
     {
-        if( empty($type) ){
-            return;
-        }
-
-        $reg = null;
         switch($type){
             case 'text':
             case 'string':
-                $param = self::validate($param,self::REG_STRING);
+                return self::REG_STRING;
                 break;
             case 'int':
             case 'integer':
-                $param = self::validate($param,self::REG_INT);
+                return self::REG_INT;
                 break;
             case 'datetime':
-                $param = self::checkDateTime($param);
+                return self::REG_DATETIME;
                 break;
             case 'date':
-                $reg = self::REG_DATE;
+                return self::REG_DATE;
                 break;
             case 'time':
-                $reg = self::REG_TIME;
+                return self::REG_TIME;
+                break;
+            case '':
+            case null:
+            default:
+                return null;
                 break;
         }
-
-        $param = self::validate($param,$reg) ? $param : (string) null;
     }
 
 }
