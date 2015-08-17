@@ -17,24 +17,29 @@ namespace Phplib\Helpers;
 class Params
 {
     /**
-     * @var string
+     * @var string - numbers regex patters
      */
     const REG_INT = '/[0-9]+/';
 
     /**
-     * @var string
+     * @var string - string regex patters
      */
     const REG_STRING = '/[a-zA-Z0-9\s\#\.\,\!\?\-\_]+/';
 
     /**
-     * @var string
+     * @var string - date regex patters
      */
-    const REG_DATE = '/Y.m.d/';
+    const REG_DATE = '/[0-9]{2,4}-[0-9]{2}-[0-9]{2}/';
 
     /**
      * @var string
      */
     const REG_EMAIL = '/^(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){255,})(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){65,}@)(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22))(?:\\.(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\\]))$/iD';
+
+    /**
+     * @var string - date regex patters
+     */
+    const REG_DATETIME = '/Y.m.d [0-9]{2}.[0-9]{2}.[0-9]{2}.[0-9]{3}./';
 
     /**
      * @var $params
@@ -48,8 +53,8 @@ class Params
 
     /**
      * Class constructor
-     * @method __construct
-     * @param string $params - object with GET or POST params
+     * @param array $params - object with GET or POST params
+     * @param boolean $safeMode - safe mode
      */
     public function __construct(array $params, $safeMode = true)
     {
@@ -58,10 +63,8 @@ class Params
     }
 
     /**
-     * Method will check if param exists in given GET or POST array and return value
-     * @param [string] $name - param name to take
-     * @param [string] $reg - regular expression to validate parameter
-     * @param [mixed] $alternative - alternative value if checked param not exists or its null
+     * Method will set safe mode
+     * @param string $mode - param name to take
      * @return string
      */
     public function setSafeMode($mode)
@@ -71,25 +74,25 @@ class Params
 
     /**
      * Method will check if param exists in given GET or POST array and return value
-     * @param [string] $name - param name to take
-     * @param [string] $type - type of parameter to check (integer,string,text,date,datetime)
-     * @param [string] $reg - regular expression to validate parameter
-     * @param [mixed] $alternative - alternative value if checked param not exists or its null
+     * @param string $name - param name to take
+     * @param string $type - type of parameter to check (integer,string,text,date,datetime)
+     * @param string $reg - regular expression to validate parameter
+     * @param mixed $alternative - alternative value if checked param not exists or its null
      * @return string
      */
     public function getParam($name, $type = null, $reg = null, $alternative = null)
     {
         $param = isset($this->params[$name]) && !empty($this->params[$name]) ? $this->params[$name] : (!empty($alternative) ? $alternative : '');
         self::applyXssProtection($param);
-        self::checkType($param, $type);
-        return !empty($reg) ? (self::validate($param, $reg) ? $param : false) : $param;
+        $reg = empty($reg) ? self::getRegexForType($type) : $reg;
+        return !empty($reg) ? self::validate($param, $reg) ? $param : null : $param;
     }
 
     /**
      * Method will validate given value base on delivered regular expression
-     * @param [string] $val - value to check
-     * @param [string] $reg - regular expression to validate value
-     * @return [boolean]
+     * @param string $val - value to check
+     * @param string $reg - regular expression to validate value
+     * @return boolean
      */
     private function validate($val, $reg)
     {
@@ -102,8 +105,8 @@ class Params
 
     /**
      * Method will apply safe mode
-     * @param [string] $param - parameter to secure
-     * @return [void]
+     * @param string $param - parameter to secure
+     * @return void
      */
     private function applyXssProtection(&$param)
     {
@@ -111,42 +114,39 @@ class Params
     }
 
     /**
-     * Method will check if given param is in given predefined type
-     * @param [string] $param - parameter to check
-     * @param [string] $type - parameter type
-     * @return [void]
+     * Method will return predefined regular expression based on given type
+     * @param string $type - parameter type
+     * @return void
      */
-    private function checkType(&$param, $type)
+    private function getRegexForType($type)
     {
-        if( empty($type) ){
-            return;
-        }
-
-        $reg = null;
-        switch($type){
+        switch ($type) {
             case 'text':
             case 'string':
-                $param = self::validate($param,self::REG_STRING);
+                return self::REG_STRING;
                 break;
             case 'int':
             case 'integer':
-                $param = self::validate($param,self::REG_INT);
+                return self::REG_INT;
                 break;
             case 'datetime':
-                $param = self::checkDateTime($param);
+                return self::REG_DATETIME;
                 break;
             case 'date':
-                $reg = self::REG_DATE;
+                return self::REG_DATE;
                 break;
             case 'email':
-                $reg = self::REG_EMAIL;
+                return = self::REG_EMAIL;
                 break;
             case 'time':
-                $reg = self::REG_TIME;
+                return self::REG_TIME;
+                break;
+            case '':
+            case null:
+            default:
+                return null;
                 break;
         }
-
-        $param = self::validate($param,$reg) ? $param : (string) null;
     }
 
 }
