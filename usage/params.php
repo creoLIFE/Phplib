@@ -19,5 +19,6 @@ $pClass = new \Phplib\Helpers\Params(
 );
 
 var_dump($pClass->getParam('url'));
-var_dump($pClass->getParam('product', '/[a-zA-Z0-9\s]+/'));
+var_dump($pClass->getParam('product', 'string'));
+var_dump($pClass->getParam('product', 'letters'));
 var_dump($pClass->getParam('unsafe'));

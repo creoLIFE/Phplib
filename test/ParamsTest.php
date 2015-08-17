@@ -28,13 +28,13 @@ class ParamsTest extends PHPUnit_Framework_TestCase
 
     public function testGetParam()
     {
-        $this->assertEquals($this->pClass->getParam('url'), $this->pArray['url']);
+        $this->assertEquals($this->pArray['url'], $this->pClass->getParam('url'));
     }
 
     public function testGetUnsafeParam()
     {
         $this->pClass->setSafeMode(false);
-        $this->assertEquals($this->pClass->getParam('unsafe'), $this->pArray['unsafe']);
+        $this->assertEquals($this->pArray['unsafe'], $this->pClass->getParam('unsafe'));
     }
 
     public function testGetUnsafeParamProtected()
@@ -44,11 +44,11 @@ class ParamsTest extends PHPUnit_Framework_TestCase
 
     public function testGetParamRegex()
     {
-        $this->assertEquals($this->pClass->getParam('product', '/[a-zA-Z0-9\s]+/'), 'Product 1');
+        $this->assertEquals('Product 1', $this->pClass->getParam('product', 'string'));
     }
 
-    public function testGetFalse()
+    public function testGetNull()
     {
-        $this->assertFalse($this->pClass->getParam('product', '/[a-z]+/'), 'Product 1');
+        $this->assertNull($this->pClass->getParam('product', 'letters'));
     }
 }

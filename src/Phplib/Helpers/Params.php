@@ -22,6 +22,11 @@ class Params
     const REG_INT = '/[0-9]+/';
 
     /**
+     * @var string - letters regex patters
+     */
+    const REG_LETTERS = '/[a-zA-Z]+/';
+
+    /**
      * @var string - string regex patters
      */
     const REG_STRING = '/[a-zA-Z0-9\s\#\.\,\!\?\-\_]+/';
@@ -76,15 +81,14 @@ class Params
      * Method will check if param exists in given GET or POST array and return value
      * @param string $name - param name to take
      * @param string $type - type of parameter to check (integer,string,text,date,datetime)
-     * @param string $reg - regular expression to validate parameter
      * @param mixed $alternative - alternative value if checked param not exists or its null
      * @return string
      */
-    public function getParam($name, $type = null, $reg = null, $alternative = null)
+    public function getParam($name, $type = null, $alternative = null)
     {
         $param = isset($this->params[$name]) && !empty($this->params[$name]) ? $this->params[$name] : (!empty($alternative) ? $alternative : '');
         self::applyXssProtection($param);
-        $reg = empty($reg) ? self::getRegexForType($type) : $reg;
+        $reg = self::getRegexForType($type);
         return !empty($reg) ? self::validate($param, $reg) ? $param : null : $param;
     }
 
@@ -125,6 +129,9 @@ class Params
             case 'string':
                 return self::REG_STRING;
                 break;
+            case 'letters':
+                return self::REG_LETTERS;
+                break;
             case 'int':
             case 'integer':
                 return self::REG_INT;
@@ -136,7 +143,7 @@ class Params
                 return self::REG_DATE;
                 break;
             case 'email':
-                return = self::REG_EMAIL;
+                return self::REG_EMAIL;
                 break;
             case 'time':
                 return self::REG_TIME;
