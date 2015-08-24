@@ -93,6 +93,20 @@ class Params
     }
 
     /**
+     * Method will check if param has valid format
+     * @param string $name - param name to take
+     * @param string $type - type of parameter to check (integer,string,text,date,datetime)
+     * @return boolean
+     */
+    public function isValid($name, $type)
+    {
+        $param = isset($this->params[$name]) && !empty($this->params[$name]) ? $this->params[$name] : '';
+        self::applyXssProtection($param);
+        $reg = self::getRegexForType($type);
+        return !empty($reg) ? self::validate($param, $reg) ? true : false : false;
+    }
+
+    /**
      * Method will validate given value base on delivered regular expression
      * @param string $val - value to check
      * @param string $reg - regular expression to validate value
