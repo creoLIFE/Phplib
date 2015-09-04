@@ -8,7 +8,7 @@
 
 ERROR_REPORTING(E_ALL);
 
-require_once(__DIR__ . '/../vendor/autoload.php');
+require_once(__DIR__ . '/../src/loader.php');
 
 class GetTextTranslatorTest extends PHPUnit_Framework_TestCase
 {
@@ -19,7 +19,7 @@ class GetTextTranslatorTest extends PHPUnit_Framework_TestCase
 
     public function testGetParam()
     {
-//        $this->assertEquals($this->pClass->getParam('product'), 'Product 1');
+
     }
 
 }

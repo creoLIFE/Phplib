@@ -14,6 +14,8 @@
 
 namespace Phplib\Helpers;
 
+use \Phplib\Helpers\HelpersException;
+
 class Params
 {
     /**
@@ -47,23 +49,30 @@ class Params
     const REG_DATETIME = '/Y.m.d [0-9]{2}.[0-9]{2}.[0-9]{2}.[0-9]{3}./';
 
     /**
-     * @var $params
+     * @var array $params
      */
     private $params;
 
     /**
-     * @var $params
+     * @var array $required
+     */
+    private $required;
+
+    /**
+     * @var boolean $safeMode
      */
     private $safeMode;
 
     /**
      * Class constructor
      * @param array $params - object with GET or POST params
+     * @param array $required - array od param names which are required
      * @param boolean $safeMode - safe mode
      */
-    public function __construct(array $params, $safeMode = true)
+    public function __construct(array $params, array $required = array(), $safeMode = true)
     {
         $this->params = $params;
+        $this->required = $required;
         self::setSafeMode($safeMode);
     }
 
@@ -83,13 +92,21 @@ class Params
      * @param string $type - type of parameter to check (integer,string,text,date,datetime)
      * @param mixed $alternative - alternative value if checked param not exists or its null
      * @return string
+     * @throws HelpersException - in case filed is required but is not valid or not exists
      */
     public function getParam($name, $type = null, $alternative = null)
     {
         $param = isset($this->params[$name]) && !empty($this->params[$name]) ? $this->params[$name] : (!empty($alternative) ? $alternative : '');
         self::applyXssProtection($param);
         $reg = self::getRegexForType($type);
-        return !empty($reg) ? self::validate($param, $reg) ? $param : null : $param;
+        $res = !empty($reg) ? self::validate($param, $reg) ? $param : null : $param;
+
+        if( in_array($name, $this->required) && empty($res)){
+            throw new HelpersException( "PHPLIB_HELPERS_PARAMS: required param '$name' not valid or not exists." );
+        }
+        else{
+            return $res;
+        }
     }
 
     /**

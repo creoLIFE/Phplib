@@ -8,7 +8,7 @@
 
 ERROR_REPORTING(E_ALL | E_STRICT);
 
-require_once(__DIR__ . '/../vendor/autoload.php');
+require_once(__DIR__ . '/../src/loader.php');
 
 $pClass = new \Phplib\Helpers\Params(
     array(
@@ -22,3 +22,16 @@ var_dump($pClass->getParam('url'));
 var_dump($pClass->getParam('product', 'string'));
 var_dump($pClass->getParam('product', 'letters'));
 var_dump($pClass->getParam('unsafe'));
+
+
+//Throwing HelpersException
+$pClass = new \Phplib\Helpers\Params(
+    array(
+        'product' => 'Product 1',
+    ),
+    array(
+        'product'
+    )
+);
+
+var_dump($pClass->getParam('product', 'int'));
