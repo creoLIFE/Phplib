@@ -132,7 +132,7 @@ class Params
     private function validate($val, $reg)
     {
         $status = @preg_match($reg, $val, $matches);
-        if ($status && !empty($matches[0]) && $matches[0] === $val) {
+        if ($status && $matches[0] !== '' && $matches[0] === $val) {
             return true;
         }
         return false;
