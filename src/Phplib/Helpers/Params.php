@@ -117,7 +117,7 @@ class Params
      */
     public function isValid($name, $type)
     {
-        $param = isset($this->params[$name]) && !empty($this->params[$name]) ? $this->params[$name] : '';
+        $param = isset($this->params[$name]) && $this->params[$name] !== '' ? $this->params[$name] : '';
         self::applyXssProtection($param);
         $reg = self::getRegexForType($type);
         return !empty($reg) ? self::validate($param, $reg) ? true : false : false;
