@@ -14,17 +14,28 @@ $pClass = new \Phplib\Helpers\Params(
     array(
         'url' => 'http://www.google.pl',
         'product' => 'Product 1',
+        'offer' => 'offer',
         'unsafe' => "<script>alert(1)</script>Product 1"
     )
 );
 
+echo "---------------------------------------------------------------------------------\n";
 var_dump($pClass->getParam('url'));
+
+echo "---------------------------------------------------------------------------------\n";
 var_dump($pClass->getParam('product', 'string'));
+
+echo "---------------------------------------------------------------------------------\n";
 var_dump($pClass->getParam('product', 'letters'));
+
+echo "---------------------------------------------------------------------------------\n";
 var_dump($pClass->getParam('unsafe'));
 
+echo "---------------------------------------------------------------------------------\n";
+var_dump($pClass->getParam('offer', '/[a-z]*/'));
 
 //Throwing HelpersException
+echo "---------------------------------------------------------------------------------\n";
 $pClass = new \Phplib\Helpers\Params(
     array(
         'product' => 'Product 1',
@@ -33,5 +44,5 @@ $pClass = new \Phplib\Helpers\Params(
         'product'
     )
 );
-
 var_dump($pClass->getParam('product', 'int'));
+

@@ -101,10 +101,9 @@ class Params
         $reg = self::getRegexForType($type);
         $res = !empty($reg) ? self::validate($param, $reg) ? $param : null : $param;
 
-        if( in_array($name, $this->required) && empty($res)){
-            throw new HelpersException( "PHPLIB_HELPERS_PARAMS: required param '$name' not valid or not exists." );
-        }
-        else{
+        if (in_array($name, $this->required) && empty($res)) {
+            throw new HelpersException("PHPLIB_HELPERS_PARAMS: required param '$name' not valid or not exists.");
+        } else {
             return $res;
         }
     }
@@ -149,12 +148,27 @@ class Params
     }
 
     /**
+     * Method will check if given string is REDEX string
+     * @param string $str -
+     * @return boolean
+     */
+    private function isRegex($str)
+    {
+        $regex = "/^\/[\s\S]+\/$/";
+        return (boolean)preg_match($regex, $str);
+    }
+
+    /**
      * Method will return predefined regular expression based on given type
      * @param string $type - parameter type
      * @return void
      */
     private function getRegexForType($type)
     {
+        if (self::isRegex($type)) {
+            return $type;
+        }
+
         switch ($type) {
             case 'text':
             case 'string':
@@ -186,5 +200,4 @@ class Params
                 break;
         }
     }
-
 }
