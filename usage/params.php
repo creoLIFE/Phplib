@@ -13,6 +13,7 @@ require_once(__DIR__ . '/../src/loader.php');
 $pClass = new \Phplib\Helpers\Params(
     array(
         'url' => 'http://www.google.pl',
+        'email' => 'test@email.com',
         'product' => 'Product 1',
         'offer' => 'offer',
         'unsafe' => "<script>alert(1)</script>Product 1"
@@ -33,6 +34,9 @@ var_dump($pClass->getParam('unsafe'));
 
 echo "---------------------------------------------------------------------------------\n";
 var_dump($pClass->getParam('offer', '/[a-z]*/'));
+
+echo "---------------------------------------------------------------------------------\n";
+var_dump($pClass->getParam('email', 'email'));
 
 //Throwing HelpersException
 echo "---------------------------------------------------------------------------------\n";

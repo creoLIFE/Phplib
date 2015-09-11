@@ -21,27 +21,14 @@ class Params
     /**
      * @var string - numbers regex patters
      */
-    const REG_INT = '/[0-9]+/';
-
-    /**
-     * @var string - letters regex patters
-     */
-    const REG_LETTERS = '/[a-zA-Z]+/';
-
-    /**
-     * @var string - string regex patters
-     */
-    const REG_STRING = '/[a-zA-Z0-9\s\#\.\,\!\?\-\_]+/';
-
-    /**
-     * @var string - date regex patters
-     */
-    const REG_DATE = '/[0-9]{2,4}-[0-9]{2}-[0-9]{2}/';
-
-    /**
-     * @var string
-     */
-    const REG_EMAIL = '/^(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){255,})(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){65,}@)(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22))(?:\\.(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\\]))$/iD';
+    private $regs = array(
+        'integer' => '/[0-9]+/',
+        'letters' => '/[a-zA-Z]+/',
+        'string' => '/[a-zA-Z0-9\s\#\.\,\!\?\-\_]+/',
+        'date' => '/[0-9]{2,4}-[0-9]{2}-[0-9]{2}/',
+        'email' => '/^(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){255,})(?!(?:(?:\\x22?\\x5C[\\x00-\\x7E]\\x22?)|(?:\\x22?[^\\x5C\\x22]\\x22?)){65,}@)(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22))(?:\\.(?:(?:[\\x21\\x23-\\x27\\x2A\\x2B\\x2D\\x2F-\\x39\\x3D\\x3F\\x5E-\\x7E]+)|(?:\\x22(?:[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x21\\x23-\\x5B\\x5D-\\x7F]|(?:\\x5C[\\x00-\\x7F]))*\\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\\]))$/iD',
+        'datetme' => '/Y.m.d [0-9]{2}.[0-9]{2}.[0-9]{2}.[0-9]{3}./'
+    );
 
     /**
      * @var string - date regex patters
@@ -74,6 +61,17 @@ class Params
         $this->params = $params;
         $this->required = $required;
         self::setSafeMode($safeMode);
+    }
+
+    /**
+     * Method will add/update validator
+     * @param string $name - name of validator
+     * @param string $regCode - regular expression string
+     * @return void
+     */
+    public function setValidator($name, $regCode)
+    {
+        $this->regs[$name] = $regCode;
     }
 
     /**
@@ -165,33 +163,30 @@ class Params
      */
     private function getRegexForType($type)
     {
-        if (self::isRegex($type)) {
+        if (self::isRegex($type) && !array_key_exists($type, $this->regs)) {
             return $type;
         }
 
         switch ($type) {
             case 'text':
             case 'string':
-                return self::REG_STRING;
+                return $this->regs['string'];
                 break;
             case 'letters':
-                return self::REG_LETTERS;
+                return $this->regs['letters'];
                 break;
             case 'int':
             case 'integer':
-                return self::REG_INT;
+                return $this->regs['integer'];
                 break;
             case 'datetime':
-                return self::REG_DATETIME;
+                return $this->regs['datetime'];
                 break;
             case 'date':
-                return self::REG_DATE;
+                return $this->regs['date'];
                 break;
             case 'email':
-                return self::REG_EMAIL;
-                break;
-            case 'time':
-                return self::REG_TIME;
+                return $this->regs['email'];
                 break;
             case '':
             case null:
