@@ -38,6 +38,12 @@ var_dump($pClass->getParam('offer', '/[a-z]*/'));
 echo "---------------------------------------------------------------------------------\n";
 var_dump($pClass->getParam('email', 'email'));
 
+echo "---------------------------------------------------------------------------------\n";
+var_dump($pClass->getParam('some_non_existing_param', '/[a-z]*/'));
+
+echo "---------------------------------------------------------------------------------\n";
+var_dump($pClass->getParam('some', 'string', 'alternative response'));
+
 //Throwing HelpersException
 echo "---------------------------------------------------------------------------------\n";
 $pClass = new \Phplib\Helpers\Params(

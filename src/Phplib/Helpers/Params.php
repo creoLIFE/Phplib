@@ -94,16 +94,19 @@ class Params
      */
     public function getParam($name, $type = null, $alternative = null)
     {
-        $param = isset($this->params[$name]) && !empty($this->params[$name]) ? $this->params[$name] : (!empty($alternative) ? $alternative : '');
-        self::applyXssProtection($param);
-        $reg = self::getRegexForType($type);
-        $res = !empty($reg) ? self::validate($param, $reg) ? $param : null : $param;
+        if( isset($this->params[$name]) && !empty($this->params[$name]) || !empty($alternative) ) {
+            $param = isset($this->params[$name]) && !empty($this->params[$name]) ? $this->params[$name] : (!empty($alternative) ? $alternative : '');
+            self::applyXssProtection($param);
+            $reg = self::getRegexForType($type);
+            $res = !empty($reg) ? self::validate($param, $reg) ? $param : null : $param;
 
-        if (in_array($name, $this->required) && empty($res)) {
-            throw new HelpersException("PHPLIB_HELPERS_PARAMS: required param '$name' not valid or not exists.");
-        } else {
-            return $res;
+            if (in_array($name, $this->required) && empty($res)) {
+                throw new HelpersException("PHPLIB_HELPERS_PARAMS: required param '$name' not valid.");
+            } else {
+                return $res;
+            }
         }
+        return null;
     }
 
     /**
