@@ -15,6 +15,7 @@ $pClass = new \Phplib\Helpers\Params(
         'url' => 'http://www.google.pl',
         'email' => 'test@email.com',
         'product' => 'Product 1',
+        'double' => '-1.23423423',
         'offer' => 'offer',
         'unsafe' => "<script>alert(1)</script>Product 1"
     )
@@ -34,6 +35,9 @@ var_dump($pClass->getParam('unsafe'));
 
 echo "---------------------------------------------------------------------------------\n";
 var_dump($pClass->getParam('offer', '/[a-z]*/'));
+
+echo "---------------------------------------------------------------------------------\n";
+var_dump($pClass->getParam('double', 'double'));
 
 echo "---------------------------------------------------------------------------------\n";
 var_dump($pClass->getParam('email', 'email'));
