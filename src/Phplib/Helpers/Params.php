@@ -22,7 +22,7 @@ class Params
      * @var string - numbers regex patters
      */
     private $regs = array(
-        'integer'   => '/[0-9]+/',
+        'integer'   => '/^-?[0-9]+/',
         'letters'   => '/[a-zA-Z]+/',
         'string'    => '/[a-zA-Z0-9\s\#\.\,\!\?\-\_]+/',
         'double'    => '/^[0-9-]+(\\.[0-9]+)?/',
