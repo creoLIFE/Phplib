@@ -20,6 +20,8 @@
  */
 namespace Phplib\Helpers\AlternativeGetTextTranslator;
 
+use PHPTAL_ConfigurationException;
+
 class AlternativeGetTextTranslator implements \PHPTAL_TranslationService
 {
     private $_vars = array();
