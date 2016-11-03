@@ -21,6 +21,7 @@
 namespace Phplib\Helpers\AlternativeGetTextTranslator;
 
 use PHPTAL_ConfigurationException;
+use PHPTAL_VariableNotFoundException;
 
 class AlternativeGetTextTranslator implements \PHPTAL_TranslationService
 {
