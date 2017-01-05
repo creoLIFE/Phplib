@@ -92,6 +92,16 @@ class Params
     }
 
     /**
+     * Method will set parameter
+     * @param string $name - param name to take
+     * @param mixed $value - value that will be set to param
+     */
+    public function setParam($name, $value)
+    {
+        $this->params[$name] = $value;
+    }
+
+    /**
      * Method will check if param exists in given GET or POST array and return value
      * @param string $name - param name to take
      * @param string $type - type of parameter to check (integer,string,text,date,datetime)
