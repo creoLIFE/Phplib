@@ -127,6 +127,15 @@ class Params
     }
 
     /**
+     * Method will remove parameter
+     * @param string $name - param name to take
+     */
+    public function removeParam($name)
+    {
+        unset($this->params[$name]);
+    }
+
+    /**
      * Method will return all params with protection if enabled
      * @return array
      */
