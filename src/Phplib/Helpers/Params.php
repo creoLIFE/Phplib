@@ -123,7 +123,7 @@ class Params
                 return $res;
             }
         }
-        return !empty($alternative) ? $alternative : null;
+        return $alternative || is_array($alternative) ? $alternative : null;
     }
 
     /**
