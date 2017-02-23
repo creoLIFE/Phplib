@@ -92,27 +92,17 @@ class Params
     }
 
     /**
-     * Method will set parameter
-     * @param string $name - param name to take
-     * @param mixed $value - value that will be set to param
-     */
-    public function setParam($name, $value)
-    {
-        $this->params[$name] = $value;
-    }
-
-    /**
      * Method will check if param exists in given GET or POST array and return value
      * @param string $name - param name to take
      * @param string $type - type of parameter to check (integer,string,text,date,datetime)
      * @param mixed $alternative - alternative value if checked param not exists or its null
-     * @return mixed
+     * @return string
      * @throws HelpersException - in case filed is required but is not valid or not exists
      */
     public function getParam($name, $type = null, $alternative = null)
     {
-        if( isset($this->params[$name]) && !empty($this->params[$name]) || !empty($alternative) ) {
-            $param = isset($this->params[$name]) && !empty($this->params[$name]) ? $this->params[$name] : (!empty($alternative) ? $alternative : '');
+        if( isset($this->params[$name]) && (!empty($this->params[$name]) || $this->params[$name] == 0) || !empty($alternative) ) {
+            $param = isset($this->params[$name]) && (!empty($this->params[$name]) || $this->params[$name] == 0) ? $this->params[$name] : (!empty($alternative) ? $alternative : '');
             self::applyXssProtection($param);
             $reg = self::getRegexForType($type);
             $res = !empty($reg) ? self::validate($param, $reg) ? $param : null : $param;
@@ -123,30 +113,7 @@ class Params
                 return $res;
             }
         }
-        return $alternative || is_array($alternative) ? $alternative : null;
-    }
-
-    /**
-     * Method will remove parameter
-     * @param string $name - param name to take
-     */
-    public function removeParam($name)
-    {
-        unset($this->params[$name]);
-    }
-
-    /**
-     * Method will return all params with protection if enabled
-     * @return array
-     */
-    public function getParams()
-    {
-        $out = [];
-        foreach($this->params as $key=>$param){
-            self::applyXssProtection($param);
-            $out[$key] = $param;
-        }
-        return $out;
+        return null;
     }
 
     /**
