@@ -150,6 +150,21 @@ class Params
     }
 
     /**
+     * @param array $paramNames - array of params which will be checked if they are empty.
+     * @return bool
+     */
+    public function checkIfEmpty($paramNames = [])
+    {
+        $out = true;
+        foreach($this->params as $key=>$param){
+            if( in_array($key,$paramNames) && !empty($param) ){
+                $out = false;
+            }
+        }
+        return $out;
+    }
+
+    /**
      * Method will check if param has valid format
      * @param string $name - param name to take
      * @param string $type - type of parameter to check (integer,string,text,date,datetime)
